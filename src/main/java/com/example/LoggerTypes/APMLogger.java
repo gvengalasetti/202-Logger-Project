@@ -15,10 +15,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class APMLogger extends GeneralLogger {
+    private GeneralLogger nextHandler;
+
     Map<String, List<Integer>> groupedData = new HashMap<>();
 
     public APMLogger(File Inputfile) {
         super(Inputfile);
+    }
+
+    @Override
+    public void handleRequest(String request){
+        System.out.println("APMLogger handling request: " + request);
+        // Pass the request to the next handler if it exists
+        if (nextHandler != null) {
+            nextHandler.handleRequest(request);
+        }
     }
 
     @Override
@@ -63,36 +74,33 @@ public class APMLogger extends GeneralLogger {
 
     public void FormatJSONData() {
         List<APMmetric> metricsList = new ArrayList<>(); // Initialize a list to hold APMmetrics
-
         // Print the grouped data for debugging
         System.out.println("Grouped Data: " + groupedData);
-
         // Iterate over each entry in groupedData
         for (Map.Entry<String, List<Integer>> entry : groupedData.entrySet()) {
             String key = entry.getKey(); // This should be the metric name (e.g., "cpu_usage_percent")
             List<Integer> values = entry.getValue();
-
-            // Print the values for the current metric
-            System.out.println("Values for " + key + ": " + values);
-
-            // Calculate statistics
-            int min = Collections.min(values);
-            int max = Collections.max(values);
-            double average = values.stream().mapToInt(Integer::intValue).average().orElse(0);
-            double median = calculateMedian(values);
-            
-            // Create an APMmetric object for the current metric
-            APMmetric apmMetric = new APMmetric(key, min, median, average, max);
+            // Calculate statistics and create APMmetric object
+            APMmetric apmMetric = createAPMmetric(key, values);
             metricsList.add(apmMetric); // Add the APMmetric to the list
         }
+        // Convert the metrics list to JSON and write to file
+        writeMetricsToJson(metricsList);
+    }
 
-        // Create a JSON object to hold the metrics list
-        Map<String, Object> jsonOutputMap = new HashMap<>();
-        jsonOutputMap.put("metrics", metricsList);
+    private APMmetric createAPMmetric(String key, List<Integer> values) {
+        // Calculate statistics
+        int min = Collections.min(values);
+        int max = Collections.max(values);
+        double average = values.stream().mapToInt(Integer::intValue).average().orElse(0);
+        double median = calculateMedian(values);
+        // Create and return the APMmetric object
+        return new APMmetric(key, min, median, average, max);
+    }
 
-        // Convert the output map to JSON
-        String jsonOutput = convertToJson(jsonOutputMap); // You may need to implement this method
-
+    private void writeMetricsToJson(List<APMmetric> metricsList) {
+        // Convert the metrics list directly to JSON
+        String jsonOutput = convertToJson(metricsList); // Convert the list to JSON
         // Write JSON output to APM.json
         try (FileWriter fileWriter = new FileWriter("APM.json")) {
             fileWriter.write(jsonOutput);

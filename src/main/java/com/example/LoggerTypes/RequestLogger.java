@@ -8,9 +8,19 @@ import java.util.HashMap;
 
 public class RequestLogger extends GeneralLogger {
     public HashMap<String, Integer> tracker = new HashMap<String, Integer>();
+    private GeneralLogger nextHandler;
 
     public RequestLogger(File Inputfile) {
         super(Inputfile);
+    }
+    
+     @Override
+    public void handleRequest(String request){
+        System.out.println("RequestLogger handling request: " + request);
+        // Pass the request to the next handler if it exists
+        if (nextHandler != null) {
+            nextHandler.handleRequest(request);
+        }
     }
 
     @Override

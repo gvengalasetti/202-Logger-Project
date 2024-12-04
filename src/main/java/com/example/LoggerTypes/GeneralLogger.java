@@ -11,6 +11,8 @@ public abstract class GeneralLogger {
     public void setHandlerNext(GeneralLogger Logger){
         this.Logger=Logger;
     }
+    public void handleRequest(String request){};
     public void ExtractData(){};
     public void FormatJSONData(){};
+    
 }
