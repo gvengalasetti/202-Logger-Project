@@ -75,7 +75,6 @@ public class RequestLogger extends GeneralLogger {
         groupedData.putIfAbsent(key, new ArrayList<>());
         groupedData.get(key).add(val);
 
-        // Ensure the list is initialized before adding values
         groupedData2.putIfAbsent(key, new ArrayList<>());
         groupedData2.get(key).add(val2);
     }

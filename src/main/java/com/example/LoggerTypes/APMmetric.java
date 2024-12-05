@@ -20,20 +20,19 @@ public class APMmetric {
     }
 
     public int getMinValue() {
-        return (int) this.minimum; // Assuming 'minValue' is a field in APMmetric
+        return (int) this.minimum; 
     }
 
     public int getMaxValue() {
-        return (int) this.max; // Assuming 'maxValue' is a field in APMmetric
+        return (int) this.max; 
     }
 
     public double getAverage() {
-        return this.average; // Assuming 'average' is a field in APMmetric
+        return this.average; 
     }
 
     public double getMedian() {
-        return this.median; // Assuming 'median' is a field in APMmetric
+        return this.median; 
     }
 
-    // Getters and setters (if needed)
 }

@@ -58,9 +58,9 @@
     <property name="sun.cpu.endian" value="little"/>
   </properties>
   <testcase classname="com.example.LoggerTypes.ApplicationLoggerTest" name="testWriteMetricsToJson" time="0.001"/>
-  <testcase classname="com.example.LoggerTypes.ApplicationLoggerTest" name="testHandleRequest" time="0"/>
-  <testcase classname="com.example.LoggerTypes.ApplicationLoggerTest" name="testConvertToJson" time="0.003"/>
-  <testcase classname="com.example.LoggerTypes.ApplicationLoggerTest" name="testExtractData" time="0.001"/>
-  <testcase classname="com.example.LoggerTypes.ApplicationLoggerTest" name="testHelperExtractData" time="0"/>
+  <testcase classname="com.example.LoggerTypes.ApplicationLoggerTest" name="testHandleRequest" time="0.001"/>
+  <testcase classname="com.example.LoggerTypes.ApplicationLoggerTest" name="testConvertToJson" time="0.002"/>
+  <testcase classname="com.example.LoggerTypes.ApplicationLoggerTest" name="testExtractData" time="0"/>
+  <testcase classname="com.example.LoggerTypes.ApplicationLoggerTest" name="testHelperExtractData" time="0.001"/>
   <testcase classname="com.example.LoggerTypes.ApplicationLoggerTest" name="testFormatJSONData" time="0.001"/>
 </testsuite>

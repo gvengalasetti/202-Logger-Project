@@ -57,7 +57,6 @@ public class ApplicationLoggerTest {
         logger.FormatJSONData();
         File jsonFile = new File("Application.json");
         assertTrue(jsonFile.exists());
-        // Optionally, you can read the JSON file and verify its contents
     }
 
     @Test
@@ -66,7 +65,6 @@ public class ApplicationLoggerTest {
         logger.writeMetricsToJson(logger.groupedData);
         File jsonFile = new File("Application.json");
         assertTrue(jsonFile.exists());
-        // Optionally, you can read the JSON file and verify its contents
     }
 
     // @Test
@@ -112,7 +110,6 @@ public class ApplicationLoggerTest {
 
     @After
     public void tearDown() {
-        // Optionally delete the JSON file created during tests
         File jsonFile = new File("Application.json");
         if (jsonFile.exists()) {
             jsonFile.delete();

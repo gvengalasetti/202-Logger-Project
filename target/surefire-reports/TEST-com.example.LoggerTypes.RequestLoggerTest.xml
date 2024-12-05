@@ -60,10 +60,10 @@
   <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testWriteMetricsToJson" time="0"/>
   <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testCalculateMedian" time="0"/>
   <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testHandleRequest" time="0"/>
-  <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testConvertToJson" time="0.001"/>
+  <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testConvertToJson" time="0"/>
   <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testCalculatePercentile" time="0.001"/>
-  <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testCreateRequestMetric" time="0"/>
-  <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testExtractData" time="0.001"/>
-  <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testHelperExtractData" time="0"/>
+  <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testCreateRequestMetric" time="0.001"/>
+  <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testExtractData" time="0"/>
+  <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testHelperExtractData" time="0.001"/>
   <testcase classname="com.example.LoggerTypes.RequestLoggerTest" name="testFormatJSONData" time="0.002"/>
 </testsuite>
