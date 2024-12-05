@@ -31,18 +31,18 @@ public class RequestMetric {
 
     // Inner class for status codes
     public static class StatusCodes {
-        private int XX1;
-        private int XX2;
-        private int XX3;
-        private int XX4;
-        private int XX5;
+        private int _1XX;
+        private int _2XX;
+        private int _3XX;
+        private int _4XX;
+        private int _5XX;
 
-        public StatusCodes(int xx1, int xx2, int xx3, int xx4, int xx5) {
-            this.XX1 = xx1;
-            this.XX2 = xx2;
-            this.XX3 = xx3;
-            this.XX4 = xx4;
-            this.XX5 = xx5;
+        public StatusCodes(int _1XX, int _2XX, int _3XX, int _4XX, int _5XX) {
+            this._1XX = _1XX;
+            this._2XX = _2XX;
+            this._3XX = _3XX;
+            this._4XX = _4XX;
+            this._5XX = _5XX;
         }
     }
 }

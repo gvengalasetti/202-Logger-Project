@@ -1,1 +1,74 @@
-{}
+{
+  "/api/retry": {
+    "url": "/api/retry",
+    "response_times": {
+      "min": 250,
+      "percentile_50": 250.0,
+      "percentile_90": 250.0,
+      "percentile_95": 250.0,
+      "percentile_99": 250.0,
+      "max": 250
+    },
+    "status_codes": {
+      "_1XX": 0,
+      "_2XX": 0,
+      "_3XX": 0,
+      "_4XX": 0,
+      "_5XX": 1
+    }
+  },
+  "/api/status": {
+    "url": "/api/status",
+    "response_times": {
+      "min": 100,
+      "percentile_50": 150.0,
+      "percentile_90": 300.0,
+      "percentile_95": 300.0,
+      "percentile_99": 300.0,
+      "max": 300
+    },
+    "status_codes": {
+      "_1XX": 0,
+      "_2XX": 3,
+      "_3XX": 0,
+      "_4XX": 0,
+      "_5XX": 1
+    }
+  },
+  "/home": {
+    "url": "/home",
+    "response_times": {
+      "min": 25,
+      "percentile_50": 25.0,
+      "percentile_90": 25.0,
+      "percentile_95": 25.0,
+      "percentile_99": 25.0,
+      "max": 25
+    },
+    "status_codes": {
+      "_1XX": 0,
+      "_2XX": 0,
+      "_3XX": 0,
+      "_4XX": 1,
+      "_5XX": 0
+    }
+  },
+  "/api/update": {
+    "url": "/api/update",
+    "response_times": {
+      "min": 200,
+      "percentile_50": 200.0,
+      "percentile_90": 200.0,
+      "percentile_95": 200.0,
+      "percentile_99": 200.0,
+      "max": 200
+    },
+    "status_codes": {
+      "_1XX": 0,
+      "_2XX": 1,
+      "_3XX": 0,
+      "_4XX": 0,
+      "_5XX": 0
+    }
+  }
+}

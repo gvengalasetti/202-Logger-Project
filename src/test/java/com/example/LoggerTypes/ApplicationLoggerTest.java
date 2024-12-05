@@ -5,99 +5,118 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ApplicationLoggerTest extends TestCase {
+public class ApplicationLoggerTest {
     private ApplicationLogger logger;
     private File testFile;
 
-    public ApplicationLoggerTest(String testName) {
-        super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(ApplicationLoggerTest.class);
-    }
-
-    @Override
-    protected void setUp() throws IOException {
-        // Create a temporary test file with sample log data
-        testFile = File.createTempFile("testlog", ".log");
+    @Before
+    public void setUp() throws IOException {
+        // Create a temporary file for testing
+        testFile = File.createTempFile("testLog", ".txt");
         try (FileWriter writer = new FileWriter(testFile)) {
-            writer.write("timestamp=2024-03-14 level=INFO message=Test message\n");
-            writer.write("timestamp=2024-03-14 level=ERROR message=Error message\n");
-            writer.write("timestamp=2024-03-14 level=INFO message=Another message\n");
+            writer.write("level=INFO\n");
+            writer.write("level=ERROR\n");
+            writer.write("level=INFO\n");
         }
         logger = new ApplicationLogger(testFile);
     }
 
-    @Override
-    protected void tearDown() {
-        testFile.delete();
-    }
-
-    /**
-     * Test handleRequest method
-     */
+    @Test
     public void testHandleRequest() {
+    
         logger.handleRequest("Test request");
-        // Since it only prints to console, we can only verify it doesn't throw exceptions
-        assertTrue(true);
+      
     }
 
-    /**
-     * Test ExtractData method
-     */
+    @Test
     public void testExtractData() {
         logger.ExtractData();
-        HashMap<String, Integer> data = logger.groupedData;
-        
-        assertEquals("Should have 2 INFO logs", 1, (int)data.get("INFO"));
-        assertEquals("Should have 1 ERROR log", 0, (int)data.get("ERROR"));
+        HashMap<String, Integer> expectedData = new HashMap<>();
+         expectedData.put("INFO", 2);
+        expectedData.put("ERROR", 1);
+        assertEquals(expectedData, logger.groupedData);
     }
 
-    /**
-     * Test helperExtractData method
-     */
+    @Test
     public void testHelperExtractData() {
-        // First call initializes with 1
-        logger.helperExtractData("INFO");
-        // Second call increments to 2
-        logger.helperExtractData("INFO");
-        // First call for ERROR initializes with 1
-        logger.helperExtractData("ERROR");
-
-        assertEquals("Should have 2 INFO logs", 1, (int)logger.groupedData.get("INFO"));
-        assertEquals("Should have 1 ERROR log", 0, (int)logger.groupedData.get("ERROR"));
+        logger.helperExtractData("DEBUG");
+        assertEquals(Integer.valueOf(1), logger.groupedData.get("DEBUG"));
+        logger.helperExtractData("DEBUG");
+        assertEquals(Integer.valueOf(2), logger.groupedData.get("DEBUG"));
     }
 
-    /**
-     * Test FormatJSONData and writeMetricsToJson methods
-     */
+    @Test
     public void testFormatJSONData() {
-        logger.ExtractData();
+        logger.ExtractData(); // Populate the groupedData first
         logger.FormatJSONData();
-        
         File jsonFile = new File("Application.json");
-        assertTrue("JSON file should be created", jsonFile.exists());
-        
-        // Clean up
-        jsonFile.delete();
+        assertTrue(jsonFile.exists());
+        // Optionally, you can read the JSON file and verify its contents
     }
 
-    /**
-     * Test convertToJson method
-     */
+    @Test
+    public void testWriteMetricsToJson() {
+        logger.ExtractData(); // Populate the groupedData first
+        logger.writeMetricsToJson(logger.groupedData);
+        File jsonFile = new File("Application.json");
+        assertTrue(jsonFile.exists());
+        // Optionally, you can read the JSON file and verify its contents
+    }
+
+    // @Test
+    // public void testConvertToJson() {
+    //     String jsonOutput = logger.convertToJson(logger.groupedData);
+    //     assertNotNull(jsonOutput);
+    //     System.out.println(jsonOutput);
+    //     assertTrue(jsonOutput.contains("INFO"));
+    //     assertTrue(jsonOutput.contains("ERROR"));
+    // }
+    @Test
     public void testConvertToJson() {
-        HashMap<String, Integer> testData = new HashMap<>();
-        testData.put("INFO", 2);
-        testData.put("ERROR", 1);
-        
-        String json = logger.convertToJson(testData);
-        
-        assertTrue("JSON should contain INFO", json.contains("\"INFO\": 2"));
-        assertTrue("JSON should contain ERROR", json.contains("\"ERROR\": 1"));
+        // Arrange
+        RequestLogger requestLogger = new RequestLogger(null); // Passing null for simplicity
+        TestObject testObject = new TestObject("John", 30, true);
+
+        // Expected JSON (formatted as pretty-printed JSON)
+        String expectedJson = "{\n" +
+                "  \"name\": \"John\",\n" +
+                "  \"age\": 30,\n" +
+                "  \"isActive\": true\n" +
+                "}";
+
+        // Act
+        String jsonOutput = requestLogger.convertToJson(testObject);
+
+        // Assert
+        assertEquals(expectedJson, jsonOutput);
+    }
+
+    // A simple class to test JSON conversion
+    static class TestObject {
+        private String name;
+        private int age;
+        private boolean isActive;
+
+        public TestObject(String name, int age, boolean isActive) {
+            this.name = name;
+            this.age = age;
+            this.isActive = isActive;
+    }
+
+
+    @After
+    public void tearDown() {
+        // Optionally delete the JSON file created during tests
+        File jsonFile = new File("Application.json");
+        if (jsonFile.exists()) {
+            jsonFile.delete();
+        }
     }
 } 
+}

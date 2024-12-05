@@ -83,7 +83,7 @@ public class APMLogger extends GeneralLogger {
         writeMetricsToJson(metricsList);
     }
 
-    private APMmetric createAPMmetric(String key, List<Integer> values) {
+    public APMmetric createAPMmetric(String key, List<Integer> values) {
         // Calculate statistics
         int min = Collections.min(values);
         int max = Collections.max(values);
@@ -106,15 +106,15 @@ public class APMLogger extends GeneralLogger {
         }
     }
 
-    private static double calculateMedian(List<Integer> list) {
-        Collections.sort(list);
-        int size = list.size();
+    public static double calculateMedian(List<Integer> values) {
+        // Convert to a mutable list
+        List<Integer> mutableValues = new ArrayList<>(values);
+        Collections.sort(mutableValues);
+        int size = mutableValues.size();
         if (size % 2 == 0) {
-            // Even number of elements: average the two middle elements
-            return (list.get(size / 2 - 1) + list.get(size / 2)) / 2.0;
+            return (mutableValues.get(size / 2 - 1) + mutableValues.get(size / 2)) / 2.0;
         } else {
-            // Odd number of elements: take the middle element
-            return list.get(size / 2);
+            return mutableValues.get(size / 2);
         }
     }
 

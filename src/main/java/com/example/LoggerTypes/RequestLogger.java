@@ -42,19 +42,19 @@ public class RequestLogger extends GeneralLogger {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(" ");
                 String request_url = null;
-                String response_time_ms = null;
-                String request_status = null;
+                String response_time_ms = "";
+                String response_status = "";
 
                  for (String part : parts) {
                     if (part.startsWith("request_url=")) {
-                        request_url = part.split("=")[1];
+                        request_url = part.split("=")[1].replace("\"","").trim();
                     }
-                    if (part.startsWith("response_time_ms=")) {
+                    if (part.startsWith("response_status=")) {
+                        response_status = part.split("=")[1];
+                    }
+                     if (part.startsWith("response_time_ms=")) {
                         response_time_ms = part.split("=")[1];
-                    }    
-                    if (part.startsWith("request_status=")) {
-                        request_status = part.split("=")[1];
-                        helperExtractData(request_url, response_time_ms, request_status);
+                        helperExtractData(request_url, response_time_ms, response_status);
 
                     }       
             }
@@ -65,21 +65,19 @@ public class RequestLogger extends GeneralLogger {
         }
     }
 
-    public void helperExtractData(String request_url, String response_time_ms, String request_status) {
+    public void helperExtractData(String request_url, String response_time_ms, String response_status) {
         String key = request_url;
-        Integer val = Integer.parseInt(response_time_ms);
-        Integer val2 = Integer.parseInt(request_status);
 
-        if (!groupedData.containsKey(key)) {
-            groupedData.put(key, new ArrayList<>());
-        }
+        Integer val = Integer.parseInt(response_time_ms);
+        Integer val2 = Integer.parseInt(response_status);
+        
+        // Ensure the list is initialized before adding values
+        groupedData.putIfAbsent(key, new ArrayList<>());
         groupedData.get(key).add(val);
 
-       if (!groupedData.containsKey(key)) {
-            groupedData2.put(key, new ArrayList<>());
-        }
+        // Ensure the list is initialized before adding values
+        groupedData2.putIfAbsent(key, new ArrayList<>());
         groupedData2.get(key).add(val2);
-
     }
 
     public void FormatJSONData() {
@@ -93,14 +91,15 @@ public class RequestLogger extends GeneralLogger {
             
             // Create metrics for this URL
             RequestMetric metric = createRequestMetric(url, responseTimes, statusCodes);
+            
+            // Use the URL directly as the key without escaping
             metricsMap.put(url, metric);
-            System.out.println(metricsMap);
         }
 
         writeMetricsToJson(metricsMap);
     }
 
-    private RequestMetric createRequestMetric(String url, List<Integer> responseTimes, List<Integer> statusCodes) {
+    public RequestMetric createRequestMetric(String url, List<Integer> responseTimes, List<Integer> statusCodes) {
         // Create ResponseTimes object
         RequestMetric.ResponseTimes responseTimesMetrics = new RequestMetric.ResponseTimes(
             Collections.min(responseTimes),
@@ -112,11 +111,10 @@ public class RequestLogger extends GeneralLogger {
         );
 
         // Calculate status code counts
-        int count1xx = (int) statusCodes.stream().filter(code -> code >= 000 && code < 200).count();
+        int count1xx = (int) statusCodes.stream().filter(code -> code >= 100 && code < 200).count();
         int count2xx = (int) statusCodes.stream().filter(code -> code >= 200 && code < 300).count();
         int count3xx = (int) statusCodes.stream().filter(code -> code >= 300 && code < 400).count();
         int count4xx = (int) statusCodes.stream().filter(code -> code >= 400 && code < 500).count();
-
         int count5xx = (int) statusCodes.stream().filter(code -> code >= 500 && code < 600).count();
 
         RequestMetric.StatusCodes statusCodeMetrics = new RequestMetric.StatusCodes(
@@ -126,7 +124,7 @@ public class RequestLogger extends GeneralLogger {
         return new RequestMetric(url, responseTimesMetrics, statusCodeMetrics);
     }
 
-    private void writeMetricsToJson(Map<String, RequestMetric> metricsMap) {
+    public void writeMetricsToJson(Map<String, RequestMetric> metricsMap) {
         Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .create();
@@ -138,13 +136,13 @@ public class RequestLogger extends GeneralLogger {
         }
     }
 
-    private double calculatePercentile(List<Integer> values, double percentile) {
+    public double calculatePercentile(List<Integer> values, double percentile) {
         Collections.sort(values); // Sort the values
         int index = (int) Math.ceil(percentile / 100.0 * values.size()) - 1; // Calculate the index
         return values.get(index); // Return the value at the calculated index
 }
 
-    private static double calculateMedian(List<Integer> list) {
+    public static double calculateMedian(List<Integer> list) {
         Collections.sort(list);
         int size = list.size();
         if (size % 2 == 0) {

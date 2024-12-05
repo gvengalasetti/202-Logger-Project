@@ -5,6 +5,5 @@ com/example/LoggerTypes/RequestMetric$StatusCodes.class
 com/example/LoggerTypes/GeneralLogger.class
 com/example/LoggerTypes/APMmetric.class
 com/example/LoggerTypes/RequestMetric$ResponseTimes.class
-com/example/LoggerTypes/ReqGroupData.class
 com/example/LoggerTypes/RequestLogger.class
 com/example/LoggerTypes/ApplicationLogger.class

@@ -1,2 +1,5 @@
-com/example/AppTest.class
 com/example/LoggerTypes/ApplicationLoggerTest.class
+com/example/LoggerTypes/APMLoggerTest.class
+com/example/LoggerTypes/RequestLoggerTest.class
+com/example/AppTest.class
+com/example/LoggerTypes/ApplicationLoggerTest$TestObject.class

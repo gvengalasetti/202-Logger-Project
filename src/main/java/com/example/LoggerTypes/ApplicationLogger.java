@@ -58,7 +58,9 @@ public class ApplicationLogger extends GeneralLogger {
         if (!groupedData.containsKey(key)) {
             groupedData.put(key, 1);
         }
+        else{
         groupedData.put(key, groupedData.get(key)+1);
+        }
     }
 
     public void FormatJSONData() {
@@ -66,7 +68,7 @@ public class ApplicationLogger extends GeneralLogger {
         writeMetricsToJson(groupedData);
     }
 
-    private void writeMetricsToJson(HashMap<String, Integer> groupedData) {
+    public void writeMetricsToJson(HashMap<String, Integer> groupedData) {
         // Convert the metrics list directly to JSON
         String jsonOutput = convertToJson(groupedData); // Convert the list to JSON
         // Write JSON output to APM.json
