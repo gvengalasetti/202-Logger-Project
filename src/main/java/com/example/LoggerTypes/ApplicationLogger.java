@@ -6,17 +6,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class ApplicationLogger extends GeneralLogger {
     private GeneralLogger nextHandler;
-    Map<String, Integer> groupedData = new HashMap<>();
+    HashMap<String, Integer> groupedData = new HashMap<>();
 
     public ApplicationLogger(File Inputfile) {
         super(Inputfile);
@@ -37,20 +35,18 @@ public class ApplicationLogger extends GeneralLogger {
         try (BufferedReader reader = new BufferedReader(new FileReader(Inputfile))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.contains("metric")) {
-                    // System.out.println("yooooza");
-                }
-                // Split the line into key-value pairs
                 String[] parts = line.split(" ");
-                String severity = null;
+                String level = null;
 
                 // Iterate over the parts to find metric and value
                 for (String part : parts) {
-                    if (part.startsWith("severity=")) {
-                        severity = part.split("=")[1];
+                    if (part.startsWith("level=")) {
+                        level = part.split("=")[1];
+                        helperExtractData(level);
                     }
                 }
             }
+
         } catch (IOException e) {
             System.out.println("An error has occurred.");
             e.printStackTrace();
@@ -67,54 +63,22 @@ public class ApplicationLogger extends GeneralLogger {
 
     public void FormatJSONData() {
         List<APMmetric> metricsList = new ArrayList<>(); // Initialize a list to hold APMmetrics
-        // Print the grouped data for debugging
-        System.out.println("Grouped Data: " + groupedData);
-        // Iterate over each entry in groupedData
-        // for (Map.Entry<String, List<Integer>> entry : groupedData.entrySet()) {
-        //     String key = entry.getKey(); // This should be the metric name (e.g., "cpu_usage_percent")
-        //     List<Integer> values = entry.getValue();
-        //     // Calculate statistics and create APMmetric object
-        //     APMmetric apmMetric = createAPMmetric(key, values);
-        //     metricsList.add(apmMetric); // Add the APMmetric to the list
-        // }
-        // // Convert the metrics list to JSON and write to file
-        // writeMetricsToJson(metricsList);
+        writeMetricsToJson(groupedData);
     }
 
-    private APMmetric createAPMmetric(String key, List<Integer> values) {
-        // Calculate statistics
-        int min = Collections.min(values);
-        int max = Collections.max(values);
-        double average = values.stream().mapToInt(Integer::intValue).average().orElse(0);
-        double median = calculateMedian(values);
-        // Create and return the APMmetric object
-        return new APMmetric(key, min, median, average, max);
-    }
-
-    private void writeMetricsToJson(List<APMmetric> metricsList) {
+    private void writeMetricsToJson(HashMap<String, Integer> groupedData) {
         // Convert the metrics list directly to JSON
-        String jsonOutput = convertToJson(metricsList); // Convert the list to JSON
+        String jsonOutput = convertToJson(groupedData); // Convert the list to JSON
         // Write JSON output to APM.json
-        try (FileWriter fileWriter = new FileWriter("APM.json")) {
+        try (FileWriter fileWriter = new FileWriter("Application.json")) {
             fileWriter.write(jsonOutput);
-            System.out.println("JSON data has been written to APM.json");
+            System.out.println("JSON data has been written to Application.json");
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the file.");
             e.printStackTrace();
         }
     }
 
-    private static double calculateMedian(List<Integer> list) {
-        Collections.sort(list);
-        int size = list.size();
-        if (size % 2 == 0) {
-            // Even number of elements: average the two middle elements
-            return (list.get(size / 2 - 1) + list.get(size / 2)) / 2.0;
-        } else {
-            // Odd number of elements: take the middle element
-            return list.get(size / 2);
-        }
-    }
 
     public String convertToJson(Object object) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create(); // Enable pretty printing

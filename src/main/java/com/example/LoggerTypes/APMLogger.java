@@ -37,9 +37,6 @@ public class APMLogger extends GeneralLogger {
         try (BufferedReader reader = new BufferedReader(new FileReader(Inputfile))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.contains("metric")) {
-                    // System.out.println("yooooza");
-                }
                 // Split the line into key-value pairs
                 String[] parts = line.split(" ");
                 String metric = null;
@@ -74,8 +71,6 @@ public class APMLogger extends GeneralLogger {
 
     public void FormatJSONData() {
         List<APMmetric> metricsList = new ArrayList<>(); // Initialize a list to hold APMmetrics
-        // Print the grouped data for debugging
-        System.out.println("Grouped Data: " + groupedData);
         // Iterate over each entry in groupedData
         for (Map.Entry<String, List<Integer>> entry : groupedData.entrySet()) {
             String key = entry.getKey(); // This should be the metric name (e.g., "cpu_usage_percent")

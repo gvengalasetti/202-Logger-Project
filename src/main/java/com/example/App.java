@@ -22,17 +22,14 @@ public class App
         logger.setHandlerNext(logger2);
         logger.handleRequest(request);
 
-        // logger2.ExtractData();
-        // logger2.FormatJSONData();
+        logger2.ExtractData();
+        logger2.FormatJSONData();
         logger2.setHandlerNext(logger3);
         logger2.handleRequest(request);
-        System.out.println("all prev run alrady proof");
 
-        // logger3.ExtractData();
-        // logger3.FormatJSONData();
-         logger3.handleRequest(request);
-
-
+        logger3.ExtractData();
+        logger3.FormatJSONData();
+        logger3.handleRequest(request);
        
     }
 }
